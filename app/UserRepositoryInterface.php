@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App;
+
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
+
 interface UserRepositoryInterface
 {
     public function getAll(): Collection;

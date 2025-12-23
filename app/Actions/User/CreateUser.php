@@ -1,6 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\User;
+
 use App\UserRepositoryInterface;
 use Illuminate\Support\Facades\Hash;
 

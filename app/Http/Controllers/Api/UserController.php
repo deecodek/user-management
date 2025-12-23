@@ -1,14 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserRequest\DeleteUserRequest;
 use App\Http\Requests\UserRequest\GetUserRequest;
 use App\Http\Requests\UserRequest\StoreUserRequest;
 use App\Http\Requests\UserRequest\UpdateUserRequest;
-use App\Http\Requests\UserRequest\DeleteUserRequest;
-use App\Service\UserService;
 use App\Http\Resources\UserResource;
+use App\Service\UserService;
+
 class UserController extends Controller
 {
     protected UserService $userService;
@@ -17,6 +20,7 @@ class UserController extends Controller
     {
         $this->userService = $userService;
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -47,7 +51,6 @@ class UserController extends Controller
         return new UserResource($user);
     }
 
-
     /**
      * Update the specified resource in storage.
      */
@@ -67,5 +70,4 @@ class UserController extends Controller
 
         return response()->noContent();
     }
-
 }

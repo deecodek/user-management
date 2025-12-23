@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
-use App\UserRepositoryInterface;
+
 use App\Actions\User\CreateUser;
-use App\Actions\User\UpdateUser;
 use App\Actions\User\DeleteUser;
 use App\Actions\User\GetUser;
-
-use Exception;
+use App\Actions\User\UpdateUser;
+use App\UserRepositoryInterface;
 
 class UserService
 {

@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Providers;
-use App\UserRepositoryInterface;
+
 use App\Repository\UserRepository;
+use App\UserRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
