@@ -6,6 +6,7 @@ namespace App\Actions\User;
 
 use App\UserRepositoryInterface;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
 
 class UpdateUser
 {
@@ -23,6 +24,11 @@ class UpdateUser
             $data['password'] = Hash::make($data['password']);
         }
 
-        return $this->userRepository->update($id, $data);
+        $user = $this->userRepository->update($id, $data);
+
+        Cache::forget("user:{$id}");
+        Cache::put("user:{$id}", $user);
+
+        return $user;
     }
 }

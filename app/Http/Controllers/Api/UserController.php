@@ -46,7 +46,9 @@ class UserController extends Controller
      */
     public function show(GetUserRequest $request)
     {
-        $user = $this->userService->getUserById($request->user);
+        $userId = (int) $request->user;
+        
+        $user = $this->userService->getUserById($userId);
 
         return new UserResource($user);
     }
@@ -66,7 +68,7 @@ class UserController extends Controller
      */
     public function destroy(DeleteUserRequest $request)
     {
-        $this->userService->deleteUser($request->user);
+        $this->userService->deleteUser((int)$request->user);
 
         return response()->noContent();
     }

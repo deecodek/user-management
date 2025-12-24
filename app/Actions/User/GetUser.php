@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Actions\User;
 
 use App\UserRepositoryInterface;
+use Illuminate\Support\Facades\Cache;
 
 class GetUser
 {
@@ -18,6 +19,14 @@ class GetUser
 
     public function execute(int $id)
     {
-        return $this->userRepository->findById($id);
+        if (Cache::has("user:{$id}")) {
+            return Cache::get("user:{$id}");
+        }
+
+        $user = $this->userRepository->findById($id);
+
+        Cache::put("user:{$id}", $user, now()->addMinutes(10));
+
+        return $user;
     }
 }

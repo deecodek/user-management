@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Actions\User;
 
 use App\UserRepositoryInterface;
+use Illuminate\Support\Facades\Cache;
 
 class DeleteUser
 {
@@ -18,6 +19,10 @@ class DeleteUser
 
     public function execute(int $id): bool
     {
+        if (Cache::has("user:{$id}")) {
+            Cache::forget("user:{$id}");
+        }
+
         return $this->userRepository->delete($id);
     }
 }

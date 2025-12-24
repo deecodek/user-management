@@ -6,6 +6,7 @@ namespace App\Actions\User;
 
 use App\UserRepositoryInterface;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
 
 class CreateUser
 {
@@ -21,6 +22,10 @@ class CreateUser
     {
         $data['password'] = Hash::make($data['password']);
 
-        return $this->userRepository->create($data);
+        $user = $this->userRepository->create($data);
+
+        Cache::put("user:{$user->id}", $user);
+
+        return $user;
     }
 }
