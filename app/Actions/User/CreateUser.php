@@ -7,6 +7,9 @@ namespace App\Actions\User;
 use App\UserRepositoryInterface;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class CreateUser
 {
@@ -20,12 +23,28 @@ class CreateUser
 
     public function execute(array $data)
     {
-        $data['password'] = Hash::make($data['password']);
+        DB::beginTransaction();
 
-        $user = $this->userRepository->create($data);
+        try {
+            $data['password'] = Hash::make($data['password']);
 
-        Cache::put("user:{$user->id}", $user);
+            $user = $this->userRepository->create($data);
 
-        return $user;
+            Cache::put("user:{$user->id}", $user);
+
+            Log::info('User created successfully', ['user_id' => $user->id]);
+
+            DB::commit();
+
+            return $user;
+        } catch (Throwable $e) {
+            DB::rollBack();
+
+            Log::error('User creation failed', [
+                'exception' => $e->getMessage(),
+            ]);
+
+            throw $e;
+        }
     }
 }

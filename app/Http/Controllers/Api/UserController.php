@@ -11,6 +11,7 @@ use App\Http\Requests\UserRequest\StoreUserRequest;
 use App\Http\Requests\UserRequest\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Service\UserService;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -28,6 +29,8 @@ class UserController extends Controller
     {
         $users = $this->userService->getAllUsers();
 
+        Log::info('User list fetched');
+
         return UserResource::collection($users);
     }
 
@@ -38,7 +41,11 @@ class UserController extends Controller
     {
         $user = $this->userService->createUser($request->validated());
 
-        return new UserResource($user);
+        Log::info('User created', ['user_id' => $user->id]);
+
+        return (new UserResource($user))
+            ->response()
+            ->setStatusCode(201);
     }
 
     /**
@@ -46,9 +53,11 @@ class UserController extends Controller
      */
     public function show(GetUserRequest $request)
     {
-        $userId = (int) $request->user;
-        
+        $userId = (int) $request->id;
+
         $user = $this->userService->getUserById($userId);
+
+        Log::info('User fetched', ['user_id' => $userId]);
 
         return new UserResource($user);
     }
@@ -60,6 +69,8 @@ class UserController extends Controller
     {
         $user = $this->userService->updateUser($id, $request->validated());
 
+        Log::info('User updated', ['user_id' => $id]);
+
         return new UserResource($user);
     }
 
@@ -68,7 +79,11 @@ class UserController extends Controller
      */
     public function destroy(DeleteUserRequest $request)
     {
-        $this->userService->deleteUser((int)$request->user);
+        $userId = (int) $request->id;
+
+        $this->userService->deleteUser($userId);
+
+        Log::info('User deleted', ['user_id' => $userId]);
 
         return response()->noContent();
     }
